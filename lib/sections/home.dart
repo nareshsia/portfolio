@@ -156,10 +156,18 @@ class HomeSection extends StatelessWidget {
   }
 
   Widget _buildProfileImage({required double radius}) {
-    return CircleAvatar(
-      radius: radius,
-      backgroundImage: const AssetImage("assets/profile.jpg"),
+    return ClipOval(
+      child: SizedBox(
+        width: radius * 2,
+        height: radius * 2,
+        child: Image.asset(
+          "assets/me.png",
+          fit: BoxFit.cover, // ensures the image fills and centers within the circle
+          alignment: Alignment(0, -0.6),// explicitly centers it
+        ),
+      ),
     );
   }
+
 
 }

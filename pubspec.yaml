@@ -77,15 +77,25 @@ flutter:
     - assets/skills/figma.svg
     - assets/skills/firebase.svg
     - assets/skills/sql.svg
-    - assets/lottie/crypto.json
+
     - assets/skills/android_studio.svg
     - assets/skills/postman.svg
     - assets/service/mobile_app.png
     - assets/service/ui_ux_development.png
     - assets/service/web_development.png
     - assets/projects/bitmet.svg
-    - assets/projects/ollo.svg
-    - assets/projects/bbexsy.svg
+
+    - assets/projects/starrbox.png
+    - assets/projects/orazo.png
+    - assets/projects/savita.svg
+
+    - assets/projects/Tradyex.png
+    - assets/projects/portfolio.png
+
+    - assets/me.png
+    - assets/mine.JPG
+    - assets/certificates/bloc.jpg
+    - assets/certificates/kotlin.jpg
 
 
 

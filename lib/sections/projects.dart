@@ -48,41 +48,46 @@ class ProjectsSection extends StatelessWidget {
             alignment: WrapAlignment.center,
             children: const [
               ProjectCard(
-                imagePath: 'assets/projects/bitmet.svg',
-                title: 'Bitmet',
-                tag: 'Buy & Trade crypto',
-                projectUrl: 'https://play.google.com/store/apps/details?id=com.app.bitmet&pcampaignid=web_share',
-              ),
-              ProjectCard(
-                imagePath: 'assets/projects/ollo.svg',
-                title: 'Ollo',
-                tag: 'Fantasy Sports',
-                projectUrl: '',
-              ),
-              ProjectCard(
-                imagePath: 'assets/projects/bbexsy.svg',
-                title: 'BBEXSY',
+                imagePath: 'assets/projects/savita.svg',
+                title: 'Savita',
                 tag: 'Crypto Exchange',
-                projectUrl: '',
+                projectUrl:
+                    'https://play.google.com/store/apps/details?id=app.exchange.savita&pcampaignid=web_share',
               ),
               ProjectCard(
                 imagePath: 'assets/projects/bitmet.svg',
                 title: 'Bitmet',
                 tag: 'Buy & Trade crypto',
-                projectUrl: 'https://play.google.com/store/apps/details?id=com.app.bitmet&pcampaignid=web_share',
+                projectUrl:
+                    'https://play.google.com/store/apps/details?id=com.app.bitmet&pcampaignid=web_share',
               ),
               ProjectCard(
-                imagePath: 'assets/projects/ollo.svg',
-                title: 'Ollo',
-                tag: 'Fantasy Sports',
-                projectUrl: '',
+                imagePath: 'assets/projects/Tradyex.png',
+                title: 'Tradyex',
+                tag: 'P2P Exchange',
+                projectUrl:
+                    'https://play.google.com/store/apps/details?id=com.app.tradyexapp&pcampaignid=web_share',
               ),
               ProjectCard(
-                imagePath: 'assets/projects/bbexsy.svg',
-                title: 'BBEXSY',
-                tag: 'Crypto Exchange',
+                imagePath: 'assets/projects/orazo.png',
+                title: 'Orazo',
+                tag: 'Crypto Wallet & Lottery',
+                projectUrl:
+                    'https://new.demozab.com/orazo/user/orazo_user/public/#',
+              ),
+              ProjectCard(
+                imagePath: 'assets/projects/portfolio.png',
+                title: 'Portfolio',
+                tag: 'Flutter Web Application',
+                projectUrl: 'https://github.com/nareshsia/portfolio',
+              ),
+              ProjectCard(
+                imagePath: 'assets/projects/starrbox.png',
+                title: 'Starrbox',
+                tag: 'Food Delivery - Private',
                 projectUrl: '',
               ),
+
               // Add more ProjectCards here
             ],
           ),
@@ -91,8 +96,6 @@ class ProjectsSection extends StatelessWidget {
     );
   }
 }
-
-
 
 class ProjectCard extends StatefulWidget {
   final String imagePath;
@@ -117,21 +120,23 @@ class _ProjectCardState extends State<ProjectCard> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          MouseRegion(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        MouseRegion(
           onEnter: (_) => setState(() => _isHovered = true),
           onExit: (_) => setState(() => _isHovered = false),
           child: GestureDetector(
-            onTap: () => launchUrl(Uri.parse(widget.projectUrl)),
+            onTap: () => widget.projectUrl.isNotEmpty
+                ? launchUrl(Uri.parse(widget.projectUrl))
+                : null,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               transform: Matrix4.identity()..scale(_isHovered ? 1.02 : 1.0),
               curve: Curves.easeInOut,
-              width: 280, // Card width
+              width: 280,
+              // Card width
               child: Material(
                 elevation: _isHovered ? 12 : 4,
                 borderRadius: BorderRadius.circular(16),
@@ -143,16 +148,17 @@ class _ProjectCardState extends State<ProjectCard> {
                       // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ClipRRect(
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(16),bottom: Radius.circular(16)),
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(16),
+                            bottom: Radius.circular(16),
+                          ),
                           child: SizedBox(
                             width: double.infinity,
                             height: 160,
-                            child: SvgPicture.asset(
-                              widget.imagePath,
-                              fit: BoxFit.cover,
-                            ),
+                            child: _buildImage(widget.imagePath),
                           ),
                         ),
+
                         // const SizedBox(height: 8),
                         // Padding(
                         //   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -191,7 +197,11 @@ class _ProjectCardState extends State<ProjectCard> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Center(
-                            child: Icon(Icons.remove_red_eye, color: Colors.white, size: 36),
+                            child: Icon(
+                              Icons.remove_red_eye,
+                              color: Colors.white,
+                              size: 36,
+                            ),
                           ),
                         ),
                       ),
@@ -200,29 +210,31 @@ class _ProjectCardState extends State<ProjectCard> {
               ),
             ),
           ),
-              ),
-          const SizedBox(height: 4),
-          Text(
-            widget.title,
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-            //textAlign: TextAlign.center,
-          ),
-          //const SizedBox(height: 2),
-          Text(
-            widget.tag,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
-            //  textAlign: TextAlign.center,
-          ),
-        ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          widget.title,
+          style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
+          //textAlign: TextAlign.center,
+        ),
+        //const SizedBox(height: 2),
+        Text(
+          widget.tag,
+          style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+          //  textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImage(String path) {
+    if (path.toLowerCase().endsWith(".svg")) {
+      return SvgPicture.asset(
+        path,
+        fit: BoxFit.cover, // contain to show full logo
       );
+    } else {
+      return Image.asset(path, fit: BoxFit.cover);
+    }
   }
 }
-
-
-

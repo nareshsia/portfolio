@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:portfolio/sections/about.dart';
+import 'package:portfolio/sections/certificates.dart';
 import 'package:portfolio/sections/contact.dart';
 import 'package:portfolio/sections/home.dart';
 import 'package:portfolio/sections/projects.dart';
@@ -21,11 +23,13 @@ class PortfolioApp extends StatefulWidget {
 
 class _PortfolioAppState extends State<PortfolioApp> {
   final ItemScrollController _scrollController = ItemScrollController();
+  ValueNotifier currentIndex = ValueNotifier(0);
 
   void scrollTo(int index) {
+    currentIndex.value = index;
     _scrollController.scrollTo(
       index: index,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 300),
     );
   }
 
@@ -35,8 +39,36 @@ class _PortfolioAppState extends State<PortfolioApp> {
     "Skills",
     "Service",
     "Projects",
+    'Certificates',
     "Contact",
   ];
+
+  final ItemPositionsListener _positionsListener =
+      ItemPositionsListener.create();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _positionsListener.itemPositions.addListener(() {
+      final positions = _positionsListener.itemPositions.value;
+      print("positions:${positions.toString()}");
+
+      if (positions.isNotEmpty) {
+        // Find the item whose top is closest to the top of the screen
+        final visibleItems = positions.where((position) => position.itemLeadingEdge >= 0);
+        if (visibleItems.isNotEmpty) {
+          final topItem = visibleItems.reduce((min, pos) =>
+          pos.itemLeadingEdge < min.itemLeadingEdge ? pos : min);
+
+          if (topItem.index != currentIndex.value) {
+            currentIndex.value = topItem.index;
+          }
+        }
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,11 +123,20 @@ class _PortfolioAppState extends State<PortfolioApp> {
                           },
                         ),
                       )
-                    : NavBar(onItemTap: scrollTo),
+                    : ValueListenableBuilder(
+                        valueListenable: currentIndex,
+                        builder: (context, value, child) {
+                          return NavBar(
+                            onItemTap: scrollTo,
+                            currentIndex: value,
+                          );
+                        },
+                      ),
                 Expanded(
                   child: ScrollablePositionedList.builder(
                     itemScrollController: _scrollController,
-                    itemCount: sectionTitles.length,
+                    itemCount: sectionTitles.length + 1,
+                    itemPositionsListener: _positionsListener,// extra for footer
                     itemBuilder: (context, index) {
                       switch (index) {
                         case 0:
@@ -106,10 +147,39 @@ class _PortfolioAppState extends State<PortfolioApp> {
                           return const SkillsSection();
                         case 3:
                           return const ServiceSection();
-                          case 4:
+                        case 4:
                           return const ProjectsSection();
                         case 5:
+                          return const Certificates();
+                        case 6:
                           return const ContactSection();
+                        case 7:
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: Center(
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    const TextSpan(text: 'Made with ❤️ by '),
+                                    TextSpan(
+                                      text: 'Naresh Prabhakar',
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const TextSpan(text: ' • © 2025'),
+                                  ],
+                                ),
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.color,
+                                ),
+                              ),
+                            ),
+                          );
                         default:
                           return const SizedBox.shrink();
                       }
